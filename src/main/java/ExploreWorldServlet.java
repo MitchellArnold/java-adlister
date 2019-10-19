@@ -6,17 +6,14 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
-@WebServlet({"/hello-world", "/hello"})
-public class HelloWorldServlet extends HttpServlet {
+
+@WebServlet("/explore-world")
+public class ExploreWorldServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String name = request.getParameter("name");
-        if (name == null){
-            name = "Earth!";
-        }
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
-        out.println("<h1>Hello, " + name + "</h1>");
+        out.println("<h1>... Explore ...</h1><br><p>yourself in this exploratory world</p>");
     }
 
 }
