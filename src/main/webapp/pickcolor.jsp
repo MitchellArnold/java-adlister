@@ -12,7 +12,13 @@
 </head>
 <body>
 <h1> Pick a color: </h1>
-<%
+<form action="/bg-color-pick.jsp" method="post">
+
+    <label for="colorPick">Enter your favorite color:</label>
+    <input id="colorPick" type="text" name="colorPick" placeholder="Enter color">
+    <br />
+    <input type="submit" />
+</form>
 
 </body>
 </html>

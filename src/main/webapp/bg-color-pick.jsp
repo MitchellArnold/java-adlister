@@ -9,9 +9,17 @@
 <html>
 <head>
     <title>Title</title>
+
+    <style>
+        body{
+            background: <%= request.getParameter("colorPick") %>;
+        }
+
+    </style>
 </head>
 <body>
-
+<h1> Welcome to your favorite color!</h1>
+<p>Good choice on <%= request.getParameter("colorPick") %>!</p>
 
 </body>
 </html>

@@ -1,0 +1,27 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: mitchellarnold
+  Date: 2019-10-22
+  Time: 10:47
+  To change this template use File | Settings | File Templates.
+--%>
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
+<head>
+    <title><%= "some title" %></title>
+</head>
+<body>
+
+<h1>Your name is ${user}.</h1>
+
+
+<%--    <c:if test="true">--%>
+<%--        <h1>Variable names should be very descriptive</h1>--%>
+<%--    </c:if>--%>
+<%--    <c:if test="false">--%>
+<%--        <h1>single letter variable names are good</h1>--%>
+<%--    </c:if>--%>
+</body>
+</html>
