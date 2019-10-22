@@ -10,6 +10,7 @@
     <jsp:include page="partials/navbar.jsp" />
     <div class="container">
         <h1>Welcome to the Adlister!</h1>
+            <p> Where all the ads come together.</p>
     </div>
 </body>
 </html>
