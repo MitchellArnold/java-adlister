@@ -7,8 +7,13 @@ import java.io.IOException;
 
 @WebServlet(name = "LoginServlet", urlPatterns = "/login")
 public class LoginServlet extends HttpServlet {
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/login.jsp").forward(request, response);
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        if (request.getSession().getAttribute("user") != null) {
+            response.sendRedirect("/profile");
+        } else {
+            request.getRequestDispatcher("/login.jsp").forward(request, response);
+        }
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -16,10 +21,19 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
         boolean validAttempt = username.equals("admin") && password.equals("password");
 
-        if (validAttempt) {
+//        System.out.println("username = " + username);
+
+        request.getSession().setAttribute("user", username);
+
+//        System.out.println("request.getSession().getAttribute(\"user\") = " + request.getSession().getAttribute("user"));
+
+        if(validAttempt){
+            request.getSession().setAttribute("user", username);
             response.sendRedirect("/profile");
-        } else {
+        }else{
             response.sendRedirect("/login");
         }
-    }
-}
+
+    } //== end of getPost ==//
+
+} //== end of LoginServlet ==//
