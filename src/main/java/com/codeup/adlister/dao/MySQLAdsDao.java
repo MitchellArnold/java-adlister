@@ -10,15 +10,19 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class MySQLAdsDao implements Ads {
     private Connection connection = null;
 
+
+
     public MySQLAdsDao(Config config) {
+
         try {
             DriverManager.registerDriver(new Driver());
             connection = DriverManager.getConnection(
                 config.getUrl(),
-                config.getUser(),
+                config.getUsername(),
                 config.getPassword()
             );
         } catch (SQLException e) {
@@ -28,10 +32,15 @@ public class MySQLAdsDao implements Ads {
 
     @Override
     public List<Ad> all() {
-        Statement stmt = null;
+        PreparedStatement stmt = null;
+
         try {
-            stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM ads");
+            // FIRST TRY //
+            String query = "SELECT * FROM ads";
+//            PreparedStatement ps = connection.prepareStatement(query);
+//            ps.setString();
+            stmt = connection.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
             return createAdsFromResults(rs);
         } catch (SQLException e) {
             throw new RuntimeException("Error retrieving all ads.", e);
@@ -41,21 +50,30 @@ public class MySQLAdsDao implements Ads {
     @Override
     public Long insert(Ad ad) {
         try {
-            Statement stmt = connection.createStatement();
-            stmt.executeUpdate(createInsertQuery(ad), Statement.RETURN_GENERATED_KEYS);
+            String query = "SELECT * FROM ads";
+            PreparedStatement stmt = connection.prepareStatement(createInsertQuery(), PreparedStatement.RETURN_GENERATED_KEYS);
+            // Evaluation happens at compile time, not at runtime
+            stmt.setLong(1, ad.getUserId());
+            stmt.setString(2, ad.getTitle());
+            stmt.setString(3, ad.getDescription());
+            stmt.executeUpdate();
+
             ResultSet rs = stmt.getGeneratedKeys();
             rs.next();
-            return rs.getLong(1);
+                System.out.println("Insered new record! New id: " + rs.getLong(1));
+                return rs.getLong(1);
+
         } catch (SQLException e) {
             throw new RuntimeException("Error creating a new ad.", e);
         }
     }
 
-    private String createInsertQuery(Ad ad) {
-        return "INSERT INTO ads(user_id, title, description) VALUES "
-            + "(" + ad.getUserId() + ", "
-            + "'" + ad.getTitle() +"', "
-            + "'" + ad.getDescription() + "')";
+    private String createInsertQuery() {
+//        return "INSERT INTO ads(user_id, title, description) VALUES "
+//            + "(" + ad.getUserId() + ", "
+//            + "'" + ad.getTitle() +"', "
+//            + "'" + ad.getDescription() + "')";
+            return "INSERT INTO ads(user_id, title, description) VALUES (?, ?, ?)";
     }
 
     private Ad extractAd(ResultSet rs) throws SQLException {
@@ -73,5 +91,15 @@ public class MySQLAdsDao implements Ads {
             ads.add(extractAd(rs));
         }
         return ads;
+    }
+
+    public static void main(String[] args) {
+        Ads adsDao = new MySQLAdsDao(new Config());
+//        List<Ad> ads = adsDao.all();
+//        for(Ad ad : ads){
+//            System.out.println(ad.toString());
+//        }
+        long lastInsertedId = adsDao.insert(new Ad(1, "Storage Shed for sale", "Old, but not old enough to hold up."));
+        System.out.println("lastInsertedId = " + lastInsertedId);
     }
 }
